@@ -8,13 +8,14 @@ export interface CustomProps {
 }
 
 export class infrastructureBase extends cdk.Stack {
-  constructor(scope: cdk.App, props: CustomProps) {
-    super(scope);
+  public readonly vpc: ec2.Vpc;
+  constructor(scope: cdk.App, id: string, props: CustomProps) {
+    super(scope, id);
 
     const cidrMask = props.cidrMask || 24;
     const vpcCidr = props.vpcCidr || "10.0.0.0/16";
 
-    const vpc = new ec2.Vpc(this, "Vpc", {
+    this.vpc = new ec2.Vpc(this, "Vpc", {
       ipAddresses: ec2.IpAddresses.cidr(vpcCidr),
       vpcName: `${props.env}-VPC`,
       subnetConfiguration: [
