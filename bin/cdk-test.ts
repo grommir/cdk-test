@@ -3,8 +3,6 @@ import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 
-
-
 import { infrastructureBase } from "../lib/infra-stack";
 import { ec2Instance } from "../lib/ec2-stack";
 import { localZone } from "../lib/route53-local-stack";
@@ -29,9 +27,5 @@ new ec2Instance(app, `${env}-worker`, {
   vpc: infraBase.vpc,
   machineImage: new ec2.AmazonLinuxImage({ generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2 }),
   instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.MICRO),
+  route53Zone: localZonesite.localZone
 });
-
-
-
-
-
