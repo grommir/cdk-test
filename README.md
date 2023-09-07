@@ -1,8 +1,11 @@
-# Welcome to your CDK TypeScript project
+# Test CDK TypeScript project
 
-This is a blank project for CDK development with TypeScript.
+## Test task resources implemented
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+* VPC
+* Security groups
+* EC2 instance
+* Route 53 zone and records
 
 ## Useful commands
 

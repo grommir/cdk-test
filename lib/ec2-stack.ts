@@ -4,7 +4,7 @@ import { aws_route53 as route53 } from "aws-cdk-lib";
 import { SecurityGroup } from "aws-cdk-lib/aws-ec2";
 
 export interface CustomProps {
-  env: string;
+  environment: string;
   vpc: ec2.Vpc;
   machineImage: ec2.IMachineImage;
   instanceType: ec2.InstanceType;
@@ -15,8 +15,13 @@ export interface CustomProps {
 
 export class ec2Instance extends cdk.Stack {
   public readonly ec2Instance: ec2.Instance;
-  constructor(scope: cdk.App, id: string, props: CustomProps) {
-    super(scope, id);
+  constructor(
+    scope: cdk.App,
+    id: string,
+    props: CustomProps,
+    stackProps?: cdk.StackProps,
+  ) {
+    super(scope, id, stackProps);
 
     const ec2InstanceSecurityGroup = new SecurityGroup(
       this,
@@ -37,7 +42,7 @@ export class ec2Instance extends cdk.Stack {
 
     new route53.ARecord(this, "ARecord", {
       zone: props.route53Zone,
-      recordName: `${id}.${props.env}.local`,
+      recordName: `${id}.${props.environment}.local`,
       target: route53.RecordTarget.fromIpAddresses(
         this.ec2Instance.instancePrivateIp,
       ),
