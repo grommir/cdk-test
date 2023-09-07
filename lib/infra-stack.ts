@@ -1,5 +1,6 @@
 import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
+import { SecurityGroup, Peer, Port } from "aws-cdk-lib/aws-ec2";
 
 export interface CustomProps {
   env: string;
@@ -9,6 +10,7 @@ export interface CustomProps {
 
 export class infrastructureBase extends cdk.Stack {
   public readonly vpc: ec2.Vpc;
+  public readonly sshSecurityGroup: SecurityGroup;
   constructor(scope: cdk.App, id: string, props: CustomProps) {
     super(scope, id);
 
@@ -36,5 +38,13 @@ export class infrastructureBase extends cdk.Stack {
         },
       ],
     });
+
+    // Create a security group for SSH
+    this.sshSecurityGroup = new SecurityGroup(this, "SSHSecurityGroup", {
+      vpc: this.vpc,
+      description: "Security Group for SSH",
+      allowAllOutbound: true,
+    });
+    this.sshSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(22));
   }
 }
