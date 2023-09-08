@@ -72,7 +72,11 @@ new rdsInstance(
     vpc: infraBase.vpc,
     dbName: `${environment}Backend`,
     instanceType: dbInstanceType,
-    ingressSources: [],
+    ingressSources: [
+      ec2.Peer.securityGroupId(
+        backendWorker.ec2InstanceSecurityGroup.securityGroupId,
+      ),
+    ],
     subnetIds: privateSubnetsIsolated.subnetIds,
   },
   { env: { region: awsRegion, account: awsAccount } },

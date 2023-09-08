@@ -16,6 +16,7 @@ export interface CustomProps {
 
 export class ec2Instance extends cdk.Stack {
   public readonly ec2Instance: ec2.Instance;
+  public readonly ec2InstanceSecurityGroup: SecurityGroup;
   constructor(
     scope: cdk.App,
     id: string,
@@ -24,7 +25,7 @@ export class ec2Instance extends cdk.Stack {
   ) {
     super(scope, id, stackProps);
 
-    const ec2InstanceSecurityGroup = new SecurityGroup(
+    this.ec2InstanceSecurityGroup = new SecurityGroup(
       this,
       "ec2InstanceSecurityGroup",
       { vpc: props.vpc, allowAllOutbound: true },
@@ -34,7 +35,7 @@ export class ec2Instance extends cdk.Stack {
       vpc: props.vpc,
       instanceType: props.instanceType,
       machineImage: props.machineImage,
-      securityGroup: ec2InstanceSecurityGroup,
+      securityGroup: this.ec2InstanceSecurityGroup,
       keyName: props.sshPubKeyName,
       vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
     });
@@ -51,7 +52,7 @@ export class ec2Instance extends cdk.Stack {
     //
     new CfnOutput(this, "ec2ServersSG", {
       exportName: "ec2ServersSG",
-      value: ec2InstanceSecurityGroup.uniqueId,
+      value: this.ec2InstanceSecurityGroup.securityGroupId,
     });
     //
   }
