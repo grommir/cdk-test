@@ -2,6 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { aws_route53 as route53 } from "aws-cdk-lib";
 import { SecurityGroup } from "aws-cdk-lib/aws-ec2";
+import { CfnOutput } from "aws-cdk-lib";
 
 export interface CustomProps {
   environment: string;
@@ -47,5 +48,11 @@ export class ec2Instance extends cdk.Stack {
         this.ec2Instance.instancePrivateIp,
       ),
     });
+    //
+    new CfnOutput(this, "ec2ServersSG", {
+      exportName: "ec2ServersSG",
+      value: ec2InstanceSecurityGroup.uniqueId,
+    });
+    //
   }
 }

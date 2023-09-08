@@ -6,6 +6,9 @@
 * Security groups
 * EC2 instance
 * Route 53 zone and records
+* RDS instance
+* Secrets (DB)
+* Parameter store (main SSH key)
 
 ## Useful commands
 

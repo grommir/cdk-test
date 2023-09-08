@@ -58,15 +58,5 @@ export class infrastructureBase extends cdk.Stack {
     const cfnKeyPair = new ec2.CfnKeyPair(this, "MainKeyPair", {
       keyName: `${id}-main-key`,
     });
-
-    // Create a Secrets Manager Secret
-    const publicKey = cfnKeyPair.toString();
-    new secretsmanager.Secret(this, `${id}-main-key`, {
-      secretName: `${id}-main-key`,
-      description: `${id} main SSH key`,
-      secretObjectValue: {
-        id_rsa_pub: SecretValue.unsafePlainText(publicKey),
-      },
-    });
   }
 }

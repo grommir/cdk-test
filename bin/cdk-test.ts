@@ -2,10 +2,12 @@
 // import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
+import { InstanceClass, InstanceSize, InstanceType } from "aws-cdk-lib/aws-ec2";
 
 import { infrastructureBase } from "../lib/infra-stack";
 import { ec2Instance } from "../lib/ec2-stack";
 import { localZone } from "../lib/route53-local-stack";
+import { rdsInstance } from "../lib/rds-stack";
 
 const app = new cdk.App();
 
@@ -38,7 +40,7 @@ const localZonesite = new localZone(
   { env: { region: awsRegion, account: awsAccount } },
 );
 
-new ec2Instance(
+const backendWorker = new ec2Instance(
   app,
   `${environment}-worker`,
   {
@@ -54,6 +56,24 @@ new ec2Instance(
     route53Zone: localZonesite.localZone,
     sshSecurityGroup: infraBase.sshSecurityGroup,
     sshPubKeyName: sshPubKeyName,
+  },
+  { env: { region: awsRegion, account: awsAccount } },
+);
+
+const dbInstanceType = InstanceType.of(InstanceClass.T3, InstanceSize.MICRO);
+const privateSubnetsIsolated = infraBase.vpc.selectSubnets({
+  subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+});
+new rdsInstance(
+  app,
+  `${environment}-backend-db`,
+  {
+    environment: environment,
+    vpc: infraBase.vpc,
+    dbName: `${environment}Backend`,
+    instanceType: dbInstanceType,
+    ingressSources: [],
+    subnetIds: privateSubnetsIsolated.subnetIds,
   },
   { env: { region: awsRegion, account: awsAccount } },
 );
