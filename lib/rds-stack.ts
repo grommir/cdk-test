@@ -36,8 +36,6 @@ export class rdsInstance extends cdk.Stack {
       engineVersion = props.engineVersion;
     }
 
-    const azs = Fn.getAzs();
-
     const subnets: any[] = [];
 
     for (let subnetId of props.subnetIds!) {

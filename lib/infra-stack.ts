@@ -1,8 +1,6 @@
 import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { SecurityGroup, Peer, Port } from "aws-cdk-lib/aws-ec2";
-import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
-import { SecretValue } from "aws-cdk-lib";
 
 export interface CustomProps {
   environment: string;
@@ -55,7 +53,7 @@ export class infrastructureBase extends cdk.Stack {
     this.sshSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(22));
 
     // Generate SSH key for environment
-    const cfnKeyPair = new ec2.CfnKeyPair(this, "MainKeyPair", {
+    new ec2.CfnKeyPair(this, "MainKeyPair", {
       keyName: `${id}-main-key`,
     });
   }
