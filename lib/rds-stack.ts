@@ -39,7 +39,7 @@ export class rdsInstance extends cdk.Stack {
     const subnets: any[] = [];
 
     for (let subnetId of props.subnetIds!) {
-      const subid = subnetId.replace("_", "").replace(" ", "");
+      const subid = subnetId.replace(/_/g, "").replace(/ /g, "");
       subnets.push(
         ec2.Subnet.fromSubnetAttributes(this, subid, {
           subnetId: subid,
