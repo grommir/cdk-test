@@ -11,7 +11,7 @@
     "cdk": "cdk"
   },
   "engines": {
-    "node": ">=24.13"
+    "node": ">=24.13 <25"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
